@@ -44,6 +44,7 @@ public class LambdaController {
 		try {
 			// await?
 			this.batchProcessing.process();
+			this.webDb.createTagClouds();
 			this.webDb.createGlobalTagCloud();
 			model.addAttribute("message", "Batch-Job erfolgreich durchgeführt");
 			model.addAttribute("files", this.webDb.listAllTagClouds());

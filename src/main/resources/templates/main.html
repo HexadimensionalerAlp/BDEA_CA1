@@ -14,7 +14,7 @@
     </form>
   </div>
   <div>
-    <input type="submit" value="Batch-Job ausführen" onclick="batchJob()">
+    <!--<input type="submit" value="Batch-Job ausführen" onclick="batchJob()">
     <script type="text/javascript">
       function batchJob() {
         const http = new XMLHttpRequest();
@@ -25,16 +25,13 @@
           alert(http.response)
         }
       }
-    </script>
+    </script>-->
     <form method="GET" enctype="multipart/form-data" action="/batch">
-      <table>
-        <tr><td>Textdatei auswählen: </td><td><input type="file" name="file" /></td></tr>
-        <tr><td></td><td><input type="submit" value="Hochladen" /></td></tr>
-      </table>
+      <input type="submit" value="Batch-Job ausführen" />
     </form>
   </div>
   <div th:if="${message}">
-    <h2 th:text="${message}"/>
+    <h5 th:text="${message}"/>
   </div>
   <div>
     Tag Clouds
