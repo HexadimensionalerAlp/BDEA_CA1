@@ -31,7 +31,7 @@ public class LambdaController {
 			this.streamProcessing.process(file);
 			this.webDb.createTagCloud(this.webDb.getDocumentByName(file.getName()));
 			model.addAttribute("files", this.webDb.listAllTagClouds());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "Fehler beim Hochladen: " + e.getMessage());
 		}
@@ -48,11 +48,23 @@ public class LambdaController {
 			this.webDb.createGlobalTagCloud();
 			model.addAttribute("message", "Batch-Job erfolgreich durchgeführt");
 			model.addAttribute("files", this.webDb.listAllTagClouds());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "Fehler beim Ausführen des Batch-Jobs: " + e.getMessage());
 		}
 
 		return "main";
+	}
+}
+
+class StreamProcessingService {
+	public void process(MultipartFile _file) {
+
+	}
+}
+
+class BatchProcessingService {
+	public void process() {
+
 	}
 }

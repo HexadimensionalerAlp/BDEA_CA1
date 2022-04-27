@@ -19,9 +19,7 @@ import java.util.List;
 public class WebDBService {
     public final static String TAG_CLOUD_PATH = "tagclouds/";
 
-    public WebDBService() {
-
-    }
+    private final DBORMMock dbORM = new DBORMMock();
 
     public ArrayList<String> listAllTagClouds() {
         File[] files = new File(TAG_CLOUD_PATH).listFiles();
@@ -78,5 +76,11 @@ class DocumentMockEntity {
     public DocumentMockEntity(String name, ArrayList<WordFrequency> words) {
         this.name = name;
         this.words = words;
+    }
+}
+
+class DBORMMock {
+    public ArrayList select(String query) {
+        return null;
     }
 }
