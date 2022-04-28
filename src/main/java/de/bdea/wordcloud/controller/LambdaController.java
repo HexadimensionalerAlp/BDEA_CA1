@@ -1,8 +1,6 @@
-package de.hs_mannheim.informatik.lambda.controller;
+package de.bdea.wordcloud.controller;
 
-import java.io.IOException;
-
-import de.hs_mannheim.informatik.lambda.service.WebDBService;
+import de.bdea.wordcloud.service.WebDBService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
