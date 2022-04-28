@@ -1,11 +1,11 @@
-package de.hs_mannheim.informatik.lambda;
+package de.wordcloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LambdaApp {
+public class WordCloudApp {
 	public static void main(String[] args) {
-		SpringApplication.run(LambdaApp.class, args);
+		SpringApplication.run(WordCloudApp.class, args);
 	}
 }

@@ -9,10 +9,10 @@
 		<version>2.3.5.RELEASE</version>
 	</parent>
 
-	<groupId>de.hs_mannheim.informatik.bdea</groupId>
-	<artifactId>lambda</artifactId>
+	<groupId>de.bdea</groupId>
+	<artifactId>wordcloud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BDEA Lambda Example</name>
+	<name>WordCloud</name>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -41,7 +41,7 @@
 							<archive>
 								<manifest>
 									<mainClass>
-										de.hs_mannheim.informatik.lambda.LambdaApp
+										de.wordcloud.WordCloudApp
 									</mainClass>
 								</manifest>
 							</archive>
@@ -67,12 +67,20 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.kennycason</groupId>
-			<artifactId>kumo-core</artifactId>
-			<version>1.27</version>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>com.kennycason</groupId>
+			<artifactId>kumo-core</artifactId>
+			<version>1.28</version>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -1,8 +1,6 @@
-package de.hs_mannheim.informatik.lambda.controller;
+package de.wordcloud.controller;
 
-import java.io.IOException;
-
-import de.hs_mannheim.informatik.lambda.service.WebDBService;
+import de.wordcloud.service.WebDBService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-public class LambdaController {
+public class WordCloudController {
 	private final WebDBService webDb = new WebDBService();
 	private final StreamProcessingService streamProcessing = new StreamProcessingService();
 	private final BatchProcessingService batchProcessing = new BatchProcessingService();
