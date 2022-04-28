@@ -1,4 +1,4 @@
-package de.bdea.wordcloud.service;
+package de.hs_mannheim.informatik.lambda.service;
 
 import com.kennycason.kumo.CollisionMode;
 import com.kennycason.kumo.WordCloud;
@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WebDBService {

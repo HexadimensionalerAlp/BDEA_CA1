@@ -1,8 +1,8 @@
-package de.bdea.wordcloud.web;
+package de.hs_mannheim.informatik.lambda.web;
 
 import java.io.File;
 
-import de.bdea.wordcloud.service.WebDBService;
+import de.hs_mannheim.informatik.lambda.service.WebDBService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
