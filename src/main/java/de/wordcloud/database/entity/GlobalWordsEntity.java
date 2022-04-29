@@ -18,6 +18,9 @@ public class GlobalWordsEntity {
     @Column(name = "word", nullable = false, unique = true)
     private String word;
 
+    @Column(name = "word_count", nullable = false)
+    private Integer wordCount;
+
     @Column(name = "tf", nullable = false)
     private Integer tf;
 

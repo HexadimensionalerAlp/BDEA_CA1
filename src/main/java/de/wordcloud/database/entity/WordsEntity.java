@@ -18,6 +18,9 @@ public class WordsEntity {
     @Column(name = "document_id", nullable = false)
     private Integer documentId;
 
+    @Column(name = "word_count", nullable = false)
+    private Integer wordCount;
+
     @Id
     @Column(name = "word", nullable = false)
     private String word;
