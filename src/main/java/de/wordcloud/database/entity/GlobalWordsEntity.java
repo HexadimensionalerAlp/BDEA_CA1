@@ -7,21 +7,23 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Table(name = "Words")
+@Table(name = "GlobalWords")
 @Entity
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WordsEntity {
+public class GlobalWordsEntity {
     @Id
-    @Column(name = "document_id", nullable = false)
-    private Integer documentId;
-
-    @Id
-    @Column(name = "word", nullable = false)
+    @Column(name = "word", nullable = false, unique = true)
     private String word;
 
     @Column(name = "tf", nullable = false)
     private Integer tf;
+
+    @Column(name = "idf", nullable = false)
+    private Integer df;
+
+    @Column(name = "tfidf", nullable = false)
+    private Double tfidf;
 }
