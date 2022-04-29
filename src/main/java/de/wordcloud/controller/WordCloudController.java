@@ -25,9 +25,8 @@ public class WordCloudController {
 	public String streamProcessing(@RequestParam("file") MultipartFile file, Model model) {
 		try {
 			model.addAttribute("message", "Datei erfolgreich hochgeladen: " + file.getOriginalFilename());
-			// await?
-			this.streamProcessing.process(file);
-			this.webDb.createTagCloud(this.webDb.getDocumentByName(file.getName()));
+			int documentId = this.streamProcessing.process(file);
+			this.webDb.createTagCloudForDocument(documentId);
 			model.addAttribute("files", this.webDb.listAllTagClouds());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,8 +55,8 @@ public class WordCloudController {
 }
 
 class StreamProcessingService {
-	public void process(MultipartFile _file) {
-
+	public Integer process(MultipartFile _file) {
+		return 0;
 	}
 }
 

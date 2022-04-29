@@ -11,6 +11,6 @@ import java.util.ArrayList;
 public interface GlobalWordsRepository extends JpaRepository<GlobalWordsEntity, Integer> {
 
     @Query("SELECT word, tfidf FROM GlobalWordsEntity ORDER BY tfidf DESC")
-    ArrayList<WordsEntity> getGlobalWordFrequency();
+    ArrayList<GlobalWordsEntity> getGlobalWordFrequency();
 
 }
