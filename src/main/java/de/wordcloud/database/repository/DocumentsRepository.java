@@ -13,6 +13,6 @@ public interface DocumentsRepository extends JpaRepository<DocumentEntity, Integ
     ArrayList<DocumentEntity> getDocumentIds();
 
     @Query("SELECT name FROM DocumentEntity WHERE id = ?1")
-    DocumentEntity getDocumentName(Integer documentId);
+    String getDocumentName(Integer documentId);
 
 }

@@ -1,11 +1,9 @@
 package de.wordcloud.database.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Table(name = "GlobalWords")
 @Entity
@@ -13,12 +11,13 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GlobalWordsEntity {
+@EqualsAndHashCode
+public class GlobalWordsEntity implements Serializable {
     @Id
     @Column(name = "word", nullable = false, unique = true)
     private String word;
 
-    @Column(name = "word_count", nullable = false)
+    @Column(name = "wordCount", nullable = false)
     private Integer wordCount;
 
     @Column(name = "tf", nullable = false)

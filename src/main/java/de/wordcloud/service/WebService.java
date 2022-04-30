@@ -10,6 +10,7 @@ import de.wordcloud.database.entity.DocumentEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
+import org.apache.commons.net.ntp.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,15 +54,22 @@ public class WebService {
         DocumentEntity document = new DocumentEntity();
         try {
             Path filesPath = Paths.get(FILES_PATH);
-
-            if (!Files.exists(filesPath)) {
-                Files.createDirectory(filesPath);
-            }
-
             String fileName = file.getOriginalFilename();
-            Files.copy(file.getInputStream(), filesPath.resolve(fileName));
-            document.setName(fileName);
-            document = this.documentsRepository.save(document);
+
+            if (fileName != null && fileName.endsWith(".txt")) {
+                if (!Files.exists(filesPath)) {
+                    Files.createDirectory(filesPath);
+                }
+
+                if (Files.exists(filesPath.resolve(fileName))) {
+                    String pureName = fileName.replaceFirst("\\.txt$", "");
+                    fileName = pureName + "_" + System.currentTimeMillis() + file.hashCode() + ".txt";
+                }
+
+                Files.copy(file.getInputStream(), filesPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+                document.setName(fileName);
+                document = this.documentsRepository.save(document);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,7 +89,7 @@ public class WebService {
     }
 
     public void createTagCloudForDocument(int documentId) {
-        String documentName = this.documentsRepository.getDocumentName(documentId).getName();
+        String documentName = this.documentsRepository.getDocumentName(documentId);
         ArrayList<WordFrequency> wordFrequencies = this.wordsRepository.getWordFrequencyOfDocument(documentId)
                 .stream()
                 .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
