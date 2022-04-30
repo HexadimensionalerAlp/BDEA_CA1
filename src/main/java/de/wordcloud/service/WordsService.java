@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class WordsService implements IFWordsService {
+public class WordsService {
     @Autowired
     private WordsRepository repository;
-
+/*
     @Override
     public WordsEntity insert(String word, int count, int documentId) {
         WordsEntity we = new WordsEntity();
@@ -78,5 +78,5 @@ public class WordsService implements IFWordsService {
 
     }
 
-
+*/
 }

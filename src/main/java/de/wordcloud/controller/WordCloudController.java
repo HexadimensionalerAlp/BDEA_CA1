@@ -1,6 +1,8 @@
 package de.wordcloud.controller;
 
-import de.wordcloud.service.WebDBService;
+import de.wordcloud.database.entity.DocumentEntity;
+import de.wordcloud.service.StreamProcessingService;
+import de.wordcloud.service.WebService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,13 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class WordCloudController {
-	private final WebDBService webDb = new WebDBService();
+	private final WebService webService = new WebService();
 	private final StreamProcessingService streamProcessing = new StreamProcessingService();
 	private final BatchProcessingService batchProcessing = new BatchProcessingService();
 
 	@GetMapping("/main")
 	public String getMain(Model model) {
-		model.addAttribute("files", this.webDb.listAllTagClouds());
+		model.addAttribute("files", this.webService.listAllTagClouds());
 
 		return "main";
 	}
@@ -24,10 +26,14 @@ public class WordCloudController {
 	@PostMapping("/upload")
 	public String streamProcessing(@RequestParam("file") MultipartFile file, Model model) {
 		try {
-			model.addAttribute("message", "Datei erfolgreich hochgeladen: " + file.getOriginalFilename());
-			int documentId = this.streamProcessing.process(file);
-			this.webDb.createTagCloudForDocument(documentId);
-			model.addAttribute("files", this.webDb.listAllTagClouds());
+			DocumentEntity document = this.webService.saveFile(file);
+
+			if (document.getName() != null && !document.getName().equals("")) {
+				model.addAttribute("message", "Datei erfolgreich hochgeladen: " + file.getOriginalFilename());
+				this.streamProcessing.process(document);
+				// this.webService.createTagCloudForDocument(document.getId());
+				model.addAttribute("files", this.webService.listAllTagClouds());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "Fehler beim Hochladen: " + e.getMessage());
@@ -41,22 +47,16 @@ public class WordCloudController {
 		try {
 			// await?
 			this.batchProcessing.process();
-			this.webDb.createTagClouds();
-			this.webDb.createGlobalTagCloud();
+			this.webService.createTagClouds();
+			this.webService.createGlobalTagCloud();
 			model.addAttribute("message", "Batch-Job erfolgreich durchgeführt");
-			model.addAttribute("files", this.webDb.listAllTagClouds());
+			model.addAttribute("files", this.webService.listAllTagClouds());
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "Fehler beim Ausführen des Batch-Jobs: " + e.getMessage());
 		}
 
 		return "main";
-	}
-}
-
-class StreamProcessingService {
-	public Integer process(MultipartFile _file) {
-		return 0;
 	}
 }
 

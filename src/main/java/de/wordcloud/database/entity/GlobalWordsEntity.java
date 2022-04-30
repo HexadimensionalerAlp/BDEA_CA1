@@ -22,10 +22,10 @@ public class GlobalWordsEntity {
     private Integer wordCount;
 
     @Column(name = "tf", nullable = false)
-    private Integer tf;
+    private Double tf;
 
     @Column(name = "idf", nullable = false)
-    private Integer df;
+    private Double df;
 
     @Column(name = "tfidf", nullable = false)
     private Double tfidf;

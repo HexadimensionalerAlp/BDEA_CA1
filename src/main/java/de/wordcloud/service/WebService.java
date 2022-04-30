@@ -6,20 +6,24 @@ import com.kennycason.kumo.WordFrequency;
 import com.kennycason.kumo.bg.CircleBackground;
 import com.kennycason.kumo.font.scale.SqrtFontScalar;
 import com.kennycason.kumo.palette.ColorPalette;
+import de.wordcloud.database.entity.DocumentEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.File;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service
-public class WebDBService {
+public class WebService {
     public final static String TAG_CLOUD_PATH = "tagclouds/";
+    public final static String FILES_PATH = "files/";
 
     @Autowired
     private WordsRepository wordsRepository;
@@ -45,6 +49,26 @@ public class WebDBService {
         return tagClouds;
     }
 
+    public DocumentEntity saveFile(MultipartFile file) {
+        DocumentEntity document = new DocumentEntity();
+        try {
+            Path filesPath = Paths.get(FILES_PATH);
+
+            if (!Files.exists(filesPath)) {
+                Files.createDirectory(filesPath);
+            }
+
+            String fileName = file.getOriginalFilename();
+            Files.copy(file.getInputStream(), filesPath.resolve(fileName));
+            document.setName(fileName);
+            document = this.documentsRepository.save(document);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return document;
+    }
+
     public void createTagCloud(ArrayList<WordFrequency> wordFrequencies, String documentName) {
         final Dimension dimension = new Dimension(600, 600);
         final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.PIXEL_PERFECT);
@@ -57,27 +81,27 @@ public class WebDBService {
     }
 
     public void createTagCloudForDocument(int documentId) {
-        String documentName = this.documentsRepository.getDocumentName(documentId);
+        String documentName = this.documentsRepository.getDocumentName(documentId).getName();
         ArrayList<WordFrequency> wordFrequencies = this.wordsRepository.getWordFrequencyOfDocument(documentId)
                 .stream()
-                .map(word -> new WordFrequency(word.getWord(), word.getTf())).collect(Collectors.toCollection(ArrayList::new));
+                .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
         this.createTagCloud(wordFrequencies, documentName);
     }
 
     public void createTagClouds() {
-        final ArrayList<Integer> documentIds = this.documentsRepository.getDocumentIds();
-        
-        if (documentIds != null) {
-            for (var documentId : documentIds) {
-                createTagCloudForDocument(documentId);
-            }
+        final ArrayList<Integer> documentIds = this.documentsRepository.getDocumentIds()
+                .stream()
+                .map(DocumentEntity::getId).collect(Collectors.toCollection(ArrayList::new));
+
+        for (var documentId : documentIds) {
+            createTagCloudForDocument(documentId);
         }
     }
 
     public void createGlobalTagCloud() {
         final ArrayList<WordFrequency> wordFrequencies = this.globalWordsRepository.getGlobalWordFrequency()
                 .stream()
-                .map(word -> new WordFrequency(word.getWord(), word.getTf())).collect(Collectors.toCollection(ArrayList::new));
+                .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
 
         createTagCloud(wordFrequencies, "GlobalTagCloud");
     }
