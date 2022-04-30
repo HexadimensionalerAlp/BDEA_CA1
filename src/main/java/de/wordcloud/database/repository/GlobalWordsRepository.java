@@ -4,12 +4,12 @@ import de.wordcloud.database.entity.GlobalWordsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public interface GlobalWordsRepository extends JpaRepository<GlobalWordsEntity, Integer> {
 
-    @Query("SELECT word, tfidf FROM GlobalWordsEntity ORDER BY tfidf DESC")
-    ArrayList<GlobalWordsEntity> getGlobalWordFrequency();
+    @Query("SELECT new GlobalWordsEntity(word, wordCount, tf, df, tfidf) FROM GlobalWordsEntity ORDER BY tfidf DESC")
+    List<GlobalWordsEntity> getGlobalWordFrequency();
 
 }

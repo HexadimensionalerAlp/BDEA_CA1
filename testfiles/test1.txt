@@ -1,0 +1,2 @@
+hallo peter, dies ist ein test-dokument. Switching to English. Switching back to German. 
+Wird english jetzt als zwei unterschiedliche Wörter gezählt? Müssen die Wörter zu lowercase konvertiert werden?

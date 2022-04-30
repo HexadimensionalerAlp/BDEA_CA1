@@ -10,7 +10,6 @@ import de.wordcloud.database.entity.DocumentEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
-import org.apache.commons.net.ntp.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +24,8 @@ import java.util.stream.Collectors;
 public class WebService {
     public final static String TAG_CLOUD_PATH = "tagclouds/";
     public final static String FILES_PATH = "files/";
+
+    public final static int WORD_CLOUD_SIZE = 100;
 
     @Autowired
     private WordsRepository wordsRepository;
@@ -92,6 +93,7 @@ public class WebService {
         String documentName = this.documentsRepository.getDocumentName(documentId);
         ArrayList<WordFrequency> wordFrequencies = this.wordsRepository.getWordFrequencyOfDocument(documentId)
                 .stream()
+                .limit(WORD_CLOUD_SIZE)
                 .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
         this.createTagCloud(wordFrequencies, documentName);
     }
@@ -109,6 +111,7 @@ public class WebService {
     public void createGlobalTagCloud() {
         final ArrayList<WordFrequency> wordFrequencies = this.globalWordsRepository.getGlobalWordFrequency()
                 .stream()
+                .limit(WORD_CLOUD_SIZE)
                 .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
 
         createTagCloud(wordFrequencies, "GlobalTagCloud");

@@ -32,10 +32,11 @@ public class StreamProcessingService {
         JavaPairRDD<String, Integer> wordCountPairs = words
                 .mapToPair(term -> new Tuple2(term.trim().toLowerCase().replaceAll("[^\\w\\-_äöüß]", ""), 1))
                 .reduceByKey((x, y) -> (int) x + (int) y);
+        JavaPairRDD<String, Integer> wordCountPairsWithoutStopWords = wordCountPairs.filter(pair -> pair._1.length() > 3);
 
-        long wordCount = wordCountPairs.count();
+        long wordCount = wordCountPairsWithoutStopWords.count();
 
-        JavaRDD<WordsEntity> finalRdd = wordCountPairs
+        JavaRDD<WordsEntity> finalRdd = wordCountPairsWithoutStopWords
                 .map(wordPair -> new WordsEntity(document.getId(), wordPair._1, wordPair._2, ((double)wordPair._2) / wordCount));
 
         ArrayList<WordsEntity> result = new ArrayList<>(finalRdd.collect());
