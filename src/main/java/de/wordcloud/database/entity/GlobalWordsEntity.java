@@ -23,8 +23,8 @@ public class GlobalWordsEntity implements Serializable {
     @Column(name = "tf", nullable = false)
     private Double tf;
 
-    @Column(name = "df", nullable = false)
-    private Double df;
+    @Column(name = "idf", nullable = false)
+    private Double idf;
 
     @Column(name = "tfidf", nullable = false)
     private Double tfidf;
