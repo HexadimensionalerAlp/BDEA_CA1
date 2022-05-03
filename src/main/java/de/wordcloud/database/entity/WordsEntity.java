@@ -22,9 +22,9 @@ public class WordsEntity implements Serializable {
     @Column(name = "word", nullable = false)
     private String word;
 
-    @Column(name = "wordCount", nullable = false)
-    private Integer wordCount;
-
     @Column(name = "tf", nullable = false)
-    private Double tf;
+    private Integer tf;
+
+    @Column(name = "tfidf", nullable = false)
+    private Double tfidf;
 }

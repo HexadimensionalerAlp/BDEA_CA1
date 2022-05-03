@@ -17,7 +17,7 @@ public class WordCloudController {
 	private final WebService webService;
 	@Autowired
 	private final StreamProcessingService streamProcessing;
-	//@Autowired
+	// @Autowired
 	// private final BatchProcessingService batchProcessing;
 
 	public WordCloudController(WebService webService, StreamProcessingService streamProcessing) {

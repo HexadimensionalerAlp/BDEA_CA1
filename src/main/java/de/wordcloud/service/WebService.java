@@ -7,6 +7,7 @@ import com.kennycason.kumo.bg.CircleBackground;
 import com.kennycason.kumo.font.scale.SqrtFontScalar;
 import com.kennycason.kumo.palette.ColorPalette;
 import de.wordcloud.database.entity.DocumentEntity;
+import de.wordcloud.database.entity.GlobalWordsEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
@@ -17,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,7 +95,8 @@ public class WebService {
         ArrayList<WordFrequency> wordFrequencies = this.wordsRepository.getWordFrequencyOfDocument(documentId)
                 .stream()
                 .limit(WORD_CLOUD_SIZE)
-                .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
+                .map(word -> new WordFrequency(word.getWord(), word.getTfidf().intValue()))
+                .collect(Collectors.toCollection(ArrayList::new));
         this.createTagCloud(wordFrequencies, documentName);
     }
 
@@ -112,7 +114,7 @@ public class WebService {
         final ArrayList<WordFrequency> wordFrequencies = this.globalWordsRepository.getGlobalWordFrequency()
                 .stream()
                 .limit(WORD_CLOUD_SIZE)
-                .map(word -> new WordFrequency(word.getWord(), word.getWordCount())).collect(Collectors.toCollection(ArrayList::new));
+                .map(word -> new WordFrequency(word.getWord(), word.getIdf().intValue())).collect(Collectors.toCollection(ArrayList::new));
 
         createTagCloud(wordFrequencies, "GlobalTagCloud");
     }

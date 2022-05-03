@@ -1,7 +1,10 @@
 package de.wordcloud.service;
 
 import de.wordcloud.database.entity.DocumentEntity;
+import de.wordcloud.database.entity.GlobalWordsEntity;
 import de.wordcloud.database.entity.WordsEntity;
+import de.wordcloud.database.repository.DocumentsRepository;
+import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -14,12 +17,20 @@ import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class StreamProcessingService {
 
     @Autowired
     private WordsRepository wordsRepository;
+
+    @Autowired
+    private GlobalWordsRepository globalWordsRepository;
+
+    @Autowired
+    private DocumentsRepository documentsRepository;
 
     public void process(DocumentEntity document) {
         String path = System.getProperty("user.dir") + "/" + WebService.FILES_PATH + document.getName();
@@ -34,10 +45,26 @@ public class StreamProcessingService {
                 .reduceByKey((x, y) -> (int) x + (int) y);
         JavaPairRDD<String, Integer> wordCountPairsWithoutStopWords = wordCountPairs.filter(pair -> pair._1.length() > 3);
 
-        long wordCount = wordCountPairsWithoutStopWords.count();
+        Map<String, Double> idfs = this.globalWordsRepository.findAll().stream()
+                .collect(Collectors.toMap(GlobalWordsEntity::getWord, GlobalWordsEntity::getIdf));
+
+        long documentCount = this.documentsRepository.count();
 
         JavaRDD<WordsEntity> finalRdd = wordCountPairsWithoutStopWords
-                .map(wordPair -> new WordsEntity(document.getId(), wordPair._1, wordPair._2, ((double)wordPair._2) / wordCount));
+                .map(wordPair -> {
+                    double idf;
+                    double tfidf;
+
+                    if (idfs.containsKey(wordPair._1)) {
+                        idf = idfs.get(wordPair._1);
+                    } else {
+                        idf = Math.log(documentCount); // documentCount / 1 (due to missing df)
+                    }
+
+                    tfidf = wordPair._2 * idf;
+
+                    return new WordsEntity(document.getId(), wordPair._1, wordPair._2, tfidf);
+                });
 
         ArrayList<WordsEntity> result = new ArrayList<>(finalRdd.collect());
         this.wordsRepository.saveAll(result);
