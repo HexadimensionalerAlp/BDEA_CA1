@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GlobalWordsRepository extends JpaRepository<GlobalWordsEntity, Integer> {
 
-    @Query("SELECT new GlobalWordsEntity(word, tf, idf) FROM GlobalWordsEntity ORDER BY tf DESC")
+    @Query("SELECT new GlobalWordsEntity(word, tf, idf, tfidf) FROM GlobalWordsEntity ORDER BY tfidf DESC")
     List<GlobalWordsEntity> getGlobalWordFrequency();
 
 }

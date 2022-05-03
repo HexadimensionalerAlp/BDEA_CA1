@@ -22,4 +22,7 @@ public class GlobalWordsEntity implements Serializable {
 
     @Column(name = "idf", nullable = false)
     private Double idf;
+
+    @Column(name = "tfidf", nullable = false)
+    private Double tfidf;
 }

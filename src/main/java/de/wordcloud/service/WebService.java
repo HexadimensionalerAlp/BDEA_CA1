@@ -7,7 +7,6 @@ import com.kennycason.kumo.bg.CircleBackground;
 import com.kennycason.kumo.font.scale.SqrtFontScalar;
 import com.kennycason.kumo.palette.ColorPalette;
 import de.wordcloud.database.entity.DocumentEntity;
-import de.wordcloud.database.entity.GlobalWordsEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
 import de.wordcloud.database.repository.WordsRepository;
@@ -36,6 +35,13 @@ public class WebService {
 
     @Autowired
     private DocumentsRepository documentsRepository;
+
+    @Autowired
+    private final StreamProcessingService streamProcessing;
+
+    public WebService(StreamProcessingService streamProcessing) {
+        this.streamProcessing = streamProcessing;
+    }
 
     public ArrayList<String> listAllTagClouds() {
         File[] files = new File(TAG_CLOUD_PATH).listFiles();
@@ -101,12 +107,11 @@ public class WebService {
     }
 
     public void createTagClouds() {
-        final ArrayList<Integer> documentIds = this.documentsRepository.getDocumentIds()
-                .stream()
-                .map(DocumentEntity::getId).collect(Collectors.toCollection(ArrayList::new));
+        final ArrayList<DocumentEntity> documents = new ArrayList<>(this.documentsRepository.findAll());
 
-        for (var documentId : documentIds) {
-            createTagCloudForDocument(documentId);
+        for (var document : documents) {
+            this.streamProcessing.process(document);
+            this.createTagCloudForDocument(document.getId());
         }
     }
 

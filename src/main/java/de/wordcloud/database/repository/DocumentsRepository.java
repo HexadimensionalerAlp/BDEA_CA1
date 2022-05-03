@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface DocumentsRepository extends JpaRepository<DocumentEntity, Integer> {
 
-    @Query("SELECT new DocumentEntity(id, name) FROM DocumentEntity")
-    List<DocumentEntity> getDocumentIds();
-
     @Query("SELECT name FROM DocumentEntity WHERE id = ?1")
     String getDocumentName(Integer documentId);
 
