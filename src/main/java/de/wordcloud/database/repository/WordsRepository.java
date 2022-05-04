@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface WordsRepository extends JpaRepository<WordsEntity, Integer> {
 
-    @Query("SELECT new WordsEntity(documentId, word, tf, tfidf) FROM WordsEntity WHERE documentId = ?1 ORDER BY tfidf DESC")
-    List<WordsEntity> getWordFrequencyOfDocument(int documentId);
+    @Query("SELECT new WordsEntity(document_id, word, tf, tfidf) FROM WordsEntity WHERE document_id = ?1 ORDER BY tfidf DESC")
+    List<WordsEntity> getWordFrequencyOfDocument(long documentId);
 
 }

@@ -18,7 +18,7 @@ public class GlobalWordsEntity implements Serializable {
     private String word;
 
     @Column(name = "tf", nullable = false)
-    private Integer tf;
+    private Long tf;
 
     @Column(name = "idf", nullable = false)
     private Double idf;

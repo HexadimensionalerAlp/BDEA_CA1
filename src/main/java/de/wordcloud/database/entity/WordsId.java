@@ -10,6 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class WordsId  implements Serializable {
-    private Integer documentId;
+    private Integer document_id;
     private String word;
 }

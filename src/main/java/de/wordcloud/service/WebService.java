@@ -25,7 +25,7 @@ public class WebService {
     public final static String TAG_CLOUD_PATH = "tagclouds/";
     public final static String FILES_PATH = "files/";
 
-    public final static int WORD_CLOUD_SIZE = 100;
+    public final static int WORD_CLOUD_SIZE = 200;
 
     @Autowired
     private WordsRepository wordsRepository;
@@ -96,7 +96,7 @@ public class WebService {
         wordCloud.writeToFile(TAG_CLOUD_PATH + documentName + ".png");
     }
 
-    public void createTagCloudForDocument(int documentId) {
+    public void createTagCloudForDocument(long documentId) {
         String documentName = this.documentsRepository.getDocumentName(documentId);
         ArrayList<WordFrequency> wordFrequencies = this.wordsRepository.getWordFrequencyOfDocument(documentId)
                 .stream()
@@ -110,7 +110,6 @@ public class WebService {
         final ArrayList<DocumentEntity> documents = new ArrayList<>(this.documentsRepository.findAll());
 
         for (var document : documents) {
-            this.streamProcessing.process(document);
             this.createTagCloudForDocument(document.getId());
         }
     }
@@ -119,7 +118,7 @@ public class WebService {
         final ArrayList<WordFrequency> wordFrequencies = this.globalWordsRepository.getGlobalWordFrequency()
                 .stream()
                 .limit(WORD_CLOUD_SIZE)
-                .map(word -> new WordFrequency(word.getWord(), word.getIdf().intValue())).collect(Collectors.toCollection(ArrayList::new));
+                .map(word -> new WordFrequency(word.getWord(), word.getTfidf().intValue())).collect(Collectors.toCollection(ArrayList::new));
 
         createTagCloud(wordFrequencies, "GlobalTagCloud");
     }

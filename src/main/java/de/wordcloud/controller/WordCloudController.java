@@ -1,6 +1,7 @@
 package de.wordcloud.controller;
 
 import de.wordcloud.database.entity.DocumentEntity;
+import de.wordcloud.service.BatchProcessingService;
 import de.wordcloud.service.StreamProcessingService;
 import de.wordcloud.service.WebService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ public class WordCloudController {
 	private final WebService webService;
 	@Autowired
 	private final StreamProcessingService streamProcessing;
-	// @Autowired
-	// private final BatchProcessingService batchProcessing;
+	@Autowired
+	private final BatchProcessingService batchProcessing;
 
-	public WordCloudController(WebService webService, StreamProcessingService streamProcessing) {
+	public WordCloudController(WebService webService, StreamProcessingService streamProcessing, BatchProcessingService batchProcessing) {
 		this.webService = webService;
 		this.streamProcessing = streamProcessing;
-		// this.batchProcessing = batchProcessing;
+		this.batchProcessing = batchProcessing;
 	}
 
 	@GetMapping("/main")
@@ -59,10 +60,9 @@ public class WordCloudController {
 	@GetMapping("/batch")
 	public String batchProcessing(Model model) {
 		try {
-			// await?
-			// this.batchProcessing.process();
-			this.webService.createTagClouds();
+			this.batchProcessing.process();
 			this.webService.createGlobalTagCloud();
+			this.webService.createTagClouds();
 			model.addAttribute("message", "Batch-Job erfolgreich durchgeführt");
 			model.addAttribute("files", this.webService.listAllTagClouds());
 		} catch (Exception e) {
@@ -71,11 +71,5 @@ public class WordCloudController {
 		}
 
 		return "main";
-	}
-}
-
-class BatchProcessingService {
-	public void process() {
-
 	}
 }
