@@ -14,18 +14,6 @@
     </form>
   </div>
   <div>
-    <!--<input type="submit" value="Batch-Job ausführen" onclick="batchJob()">
-    <script type="text/javascript">
-      function batchJob() {
-        const http = new XMLHttpRequest();
-        http.open("GET", 'localhost:8080/batch');
-        http.send();
-
-        http.onreadystatechange = () => {
-          alert(http.response)
-        }
-      }
-    </script>-->
     <form method="GET" enctype="multipart/form-data" action="/batch">
       <input type="submit" value="Batch-Job ausführen" />
     </form>

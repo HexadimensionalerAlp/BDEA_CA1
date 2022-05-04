@@ -5,6 +5,7 @@ import de.wordcloud.database.entity.GlobalWordsEntity;
 import de.wordcloud.database.entity.WordsEntity;
 import de.wordcloud.database.repository.DocumentsRepository;
 import de.wordcloud.database.repository.GlobalWordsRepository;
+import de.wordcloud.database.repository.WordsRepository;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
@@ -14,6 +15,7 @@ import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,9 @@ public class BatchProcessingService {
 
     @Autowired
     private GlobalWordsRepository globalWordsRepository;
+
+    @Autowired
+    private WordsRepository wordsRepository;
 
     @Autowired
     private DocumentsRepository documentsRepository;
@@ -59,7 +64,6 @@ public class BatchProcessingService {
     }
 
     private void recalculateTfidfs(Dataset<Row> allWords) {
-
         Map<String, Double> idfs = this.globalWordsRepository.findAll().stream()
                 .collect(Collectors.toMap(GlobalWordsEntity::getWord, GlobalWordsEntity::getIdf));
 
@@ -72,7 +76,11 @@ public class BatchProcessingService {
                     return new WordsEntity(row.<Long>getAs("document_id"), word, tf, tfidf);
                 }, Encoders.bean(WordsEntity.class));
 
-        transformedWords.write().mode("Overwrite")
-                .jdbc("jdbc:mysql://localhost:3306", "bdea.words", DBUtils.getConnectionProperties());
+        ArrayList<WordsEntity> result = new ArrayList<>(transformedWords.toJavaRDD().collect());
+        this.wordsRepository.saveAll(result);
+
+        // for some reason this seems to only empty the table but not fill it with the actual words
+        // transformedWords.write().mode("Overwrite")
+        //         .jdbc("jdbc:mysql://localhost:3306", "bdea.words", DBUtils.getConnectionProperties());
     }
 }

@@ -60,7 +60,7 @@ public class StreamProcessingService {
 
             Dataset<WordsEntity> wordsDataset = spark.sqlContext().createDataset(finalRdd.rdd(), Encoders.bean(WordsEntity.class));
 
-            wordsDataset.write().mode("Overwrite")
+            wordsDataset.write().mode("Append")
                     .jdbc("jdbc:mysql://localhost:3306", "bdea.words", DBUtils.getConnectionProperties());
         } catch (Exception e) {
             e.printStackTrace();

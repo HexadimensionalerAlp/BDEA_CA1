@@ -36,13 +36,6 @@ public class WebService {
     @Autowired
     private DocumentsRepository documentsRepository;
 
-    @Autowired
-    private final StreamProcessingService streamProcessing;
-
-    public WebService(StreamProcessingService streamProcessing) {
-        this.streamProcessing = streamProcessing;
-    }
-
     public ArrayList<String> listAllTagClouds() {
         File[] files = new File(TAG_CLOUD_PATH).listFiles();
         ArrayList<String> tagClouds = new ArrayList<>();
