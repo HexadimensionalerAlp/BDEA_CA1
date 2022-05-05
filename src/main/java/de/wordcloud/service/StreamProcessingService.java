@@ -31,6 +31,7 @@ public class StreamProcessingService {
     private DocumentsRepository documentsRepository;
 
     public void process(DocumentEntity document) {
+        // change the path to use hdfs
         String path = System.getProperty("user.dir") + "/" + WebService.FILES_PATH + document.getName();
         SparkConf config = new SparkConf().setAppName("WordCount").setMaster("local[*]");
         SparkSession spark = SparkSession.builder().config(config).getOrCreate();
